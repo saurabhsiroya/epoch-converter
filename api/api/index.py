@@ -413,10 +413,6 @@ def account_usage():
         'reset_date': '2025-07-01T00:00:00Z'  # Next month
     })
 
-# Vercel serverless function handler
-def handler(request):
-    return app(request.environ, lambda status, headers: None)
-
-if __name__ == '__main__':
-    app.run(debug=True)
+# Export the Flask app for Vercel
+app = app
 
