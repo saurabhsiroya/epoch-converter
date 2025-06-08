@@ -9,12 +9,19 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCurrentEpoch, useEpochToDate, useDateToEpoch, useTheme } from './hooks/useEpochConverter';
 import { useCurrentWeek, useDayOfYear, useWeeksInYear, useWeekLookup } from './hooks/useWeekNumber';
+import { useSEO, useStructuredData, usePageView } from './hooks/useSEO';
+import { generateStructuredData, generateFAQStructuredData } from './utils/seoUtils';
 import { convertTimeUnits, getEpochDates } from './utils/epochUtils';
 import { programmingExamples, timeConversions, epochInfo } from './data/programmingExamples';
 import { weekNumberExamples, weekInfo } from './data/weekExamples';
 import './App.css';
 
 function App() {
+  // SEO hooks
+  useSEO();
+  useStructuredData(generateStructuredData());
+  usePageView('Epoch Converter - Home');
+  
   const currentEpoch = useCurrentEpoch();
   const { isDark, toggleTheme } = useTheme();
   const epochToDateHook = useEpochToDate();
