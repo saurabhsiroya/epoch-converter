@@ -19,78 +19,69 @@ import SupportUs from './components/SupportUs';
 import AboutEpoch from './components/AboutEpoch';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-import AdvancedSEO from './components/AdvancedSEO';
+import './App.css';
 
-function App() {
+const App: React.FC = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
         <StripeProvider>
-          <AdvancedSEO />
-          <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 transition-colors">
+          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
             <Header />
             
             <main className="container mx-auto px-4 py-8">
-              {/* Hero Section with Current Timestamp */}
-              <section className="text-center mb-12">
+              {/* Hero Section */}
+              <section className="mb-12">
                 <CurrentTimestamp />
-              </section>
-
-              {/* Current Date Details */}
-              <CurrentDateDetails />
-
-              {/* Main Converters - Now Tabbed */}
-              <MainConverters />
-
-              {/* Competitive Features Section */}
-              <CompetitiveFeatures />
-
-              {/* Week and Year Tools */}
-              <div className="grid lg:grid-cols-2 gap-8 mb-12">
-                <YearWeeksOverview />
-                <EpochDates />
-              </div>
-
-              {/* API Service and Analytics */}
-              <div className="grid lg:grid-cols-2 gap-8 mb-12">
-                <ApiService />
-                <UsageAnalytics />
-              </div>
-
-              {/* API Testing Dashboard */}
-              <section className="mb-12">
-                <ApiTester />
-              </section>
-
-              {/* Support Us Section */}
-              <SupportUs />
-
-              {/* Collapsible Reference Tools */}
-              <div className="grid lg:grid-cols-2 gap-8 mb-12">
-                <TimeReference />
-                <div className="space-y-8">
-                  <ProgrammingExamples />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+                  <CurrentDateDetails />
                 </div>
-              </div>
-
-              {/* Batch Converter */}
-              <section className="mb-12">
-                <BatchConverter />
               </section>
-
-              {/* Collapsible About Section */}
+              
+              {/* Main Converters */}
+              <MainConverters />
+              
+              {/* Year Weeks Overview */}
+              <YearWeeksOverview />
+              
+              {/* Time Reference */}
+              <TimeReference />
+              
+              {/* Epoch Dates */}
+              <EpochDates />
+              
+              {/* Batch Converter */}
+              <BatchConverter />
+              
+              {/* Support Us Section - Added prominently */}
+              <SupportUs />
+              
+              {/* API Service */}
+              <ApiService />
+              
+              {/* API Tester */}
+              <ApiTester />
+              
+              {/* Usage Analytics */}
+              <UsageAnalytics />
+              
+              {/* Competitive Features */}
+              <CompetitiveFeatures />
+              
+              {/* About Epoch */}
               <AboutEpoch />
-
-              {/* FAQ Section */}
+              
+              {/* FAQ */}
               <FAQ />
             </main>
-
+            
             <Footer />
           </div>
         </StripeProvider>
       </AuthProvider>
     </ThemeProvider>
   );
-}
+};
 
 export default App;
+

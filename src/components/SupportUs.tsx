@@ -1,163 +1,157 @@
 import React, { useState } from 'react';
-import { Heart, Coffee, Star, Gift, Check, X } from 'lucide-react';
+import { Heart, Coffee, CreditCard } from 'lucide-react';
+import PaymentModal from './PaymentModal';
 
 const SupportUs: React.FC = () => {
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState('');
-  const [showThankYou, setShowThankYou] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'Pro' | 'Enterprise'>('Pro');
 
-  const predefinedAmounts = [
-    { amount: 5, label: 'Buy us a coffee', icon: Coffee, description: 'Support our hosting costs' },
-    { amount: 15, label: 'Sponsor a feature', icon: Star, description: 'Help us add new tools' },
-    { amount: 50, label: 'Premium supporter', icon: Gift, description: 'Become a premium supporter' },
-  ];
-
-  const handleDonation = async (amount: number) => {
-    setLoading(true);
-    
-    try {
-      // In a real implementation, this would create a Stripe Checkout session
-      // For demo purposes, we'll simulate the payment process
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      setShowThankYou(true);
-      setTimeout(() => {
-        setShowThankYou(false);
-        setSelectedAmount(null);
-        setCustomAmount('');
-      }, 3000);
-    } catch (error) {
-      console.error('Payment failed:', error);
-    } finally {
-      setLoading(false);
-    }
+  const handleOpenModal = (plan: 'Pro' | 'Enterprise') => {
+    setSelectedPlan(plan);
+    setShowModal(true);
   };
-
-  const handleCustomDonation = () => {
-    const amount = parseFloat(customAmount);
-    if (amount && amount >= 1) {
-      handleDonation(amount);
-    }
-  };
-
-  if (showThankYou) {
-    return (
-      <section className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl shadow-lg border border-green-200 dark:border-green-800 p-8 mb-12 transition-colors">
-        <div className="text-center">
-          <div className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
-          </div>
-          <h2 className="text-3xl font-bold text-green-900 dark:text-green-300 mb-2">
-            Thank You! 🎉
-          </h2>
-          <p className="text-green-700 dark:text-green-400 text-lg">
-            Your support means the world to us and helps keep this tool free for everyone!
-          </p>
-        </div>
-      </section>
-    );
-  }
 
   return (
-    <section className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl shadow-lg border border-purple-200 dark:border-purple-800 p-8 mb-12 transition-colors">
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center mb-4">
-          <Heart className="h-8 w-8 text-red-500 mr-3" />
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Support Our Work</h2>
+    <section className="py-12 px-4 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-blue-900 rounded-xl my-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-10">
+          <Heart className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Support Epoch Converter</h2>
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+            Help us keep this tool free, up-to-date, and ad-light by supporting our work through subscriptions or donations.
+          </p>
         </div>
-        <p className="text-gray-700 dark:text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">
-          This epoch converter is completely free and always will be. If you find it useful, 
-          consider supporting us to help cover hosting costs and fund new features.
-        </p>
-      </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        {predefinedAmounts.map((option) => {
-          const Icon = option.icon;
-          return (
-            <div
-              key={option.amount}
-              className={`relative bg-white dark:bg-gray-800 rounded-lg border-2 p-6 cursor-pointer transition-all hover:shadow-lg ${
-                selectedAmount === option.amount
-                  ? 'border-purple-500 dark:border-purple-400 ring-2 ring-purple-200 dark:ring-purple-800'
-                  : 'border-gray-200 dark:border-gray-600 hover:border-purple-300 dark:hover:border-purple-600'
-              }`}
-              onClick={() => setSelectedAmount(option.amount)}
-            >
-              <div className="text-center">
-                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <Icon className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                  ${option.amount}
-                </h3>
-                <p className="font-medium text-purple-600 dark:text-purple-400 mb-2">
-                  {option.label}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {option.description}
-                </p>
+        <div className="grid md:grid-cols-2 gap-8 mb-10">
+          {/* Pro Plan */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden transition-transform hover:scale-105">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Pro Plan</h3>
+              <div className="flex items-baseline">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">$15</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
               </div>
-              {selectedAmount === option.amount && (
-                <div className="absolute top-3 right-3">
-                  <div className="w-6 h-6 bg-purple-600 dark:bg-purple-500 rounded-full flex items-center justify-center">
-                    <Check className="h-4 w-4 text-white" />
-                  </div>
-                </div>
-              )}
             </div>
-          );
-        })}
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-600 p-6 mb-6">
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Custom Amount</h3>
-        <div className="flex items-center space-x-4">
-          <div className="flex-1">
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">$</span>
-              <input
-                type="number"
-                value={customAmount}
-                onChange={(e) => setCustomAmount(e.target.value)}
-                placeholder="Enter amount"
-                min="1"
-                step="0.01"
-                className="w-full pl-8 pr-4 py-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              />
+            <div className="p-6">
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Ad-free experience
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  API access (10,000 requests/day)
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Batch conversion (up to 10,000 timestamps)
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Advanced timezone features
+                </li>
+              </ul>
+              <button
+                onClick={() => handleOpenModal('Pro')}
+                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center"
+              >
+                <CreditCard className="w-5 h-5 mr-2" />
+                Upgrade to Pro
+              </button>
             </div>
           </div>
-          <button
-            onClick={handleCustomDonation}
-            disabled={!customAmount || parseFloat(customAmount) < 1 || loading}
-            className="px-6 py-3 bg-purple-600 dark:bg-purple-500 text-white rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Processing...' : 'Donate'}
-          </button>
+
+          {/* Enterprise Plan */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border-2 border-blue-500 dark:border-blue-400 transition-transform hover:scale-105">
+            <div className="p-6 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/30">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Enterprise Plan</h3>
+                <span className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300 text-xs font-medium px-2.5 py-0.5 rounded-full">Popular</span>
+              </div>
+              <div className="flex items-baseline">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">$99</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-1">/month</span>
+              </div>
+            </div>
+            <div className="p-6">
+              <ul className="space-y-3 mb-6">
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Everything in Pro plan
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Unlimited API requests
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Priority support
+                </li>
+                <li className="flex items-center text-gray-700 dark:text-gray-300">
+                  <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  Custom integration assistance
+                </li>
+              </ul>
+              <button
+                onClick={() => handleOpenModal('Enterprise')}
+                className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex items-center justify-center"
+              >
+                <CreditCard className="w-5 h-5 mr-2" />
+                Get Enterprise
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* One-time donation */}
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 text-center">
+          <Coffee className="w-10 h-10 text-amber-600 mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Buy us a coffee</h3>
+          <p className="text-gray-700 dark:text-gray-300 mb-4">
+            Prefer a one-time donation? Support our work with any amount you choose.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3">
+            <button className="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors">
+              $5
+            </button>
+            <button className="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors">
+              $10
+            </button>
+            <button className="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors">
+              $25
+            </button>
+            <button className="py-2 px-4 bg-amber-600 hover:bg-amber-700 text-white font-medium rounded-lg transition-colors">
+              Custom
+            </button>
+          </div>
         </div>
       </div>
 
-      {selectedAmount && (
-        <div className="text-center">
-          <button
-            onClick={() => handleDonation(selectedAmount)}
-            disabled={loading}
-            className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-500 dark:to-pink-500 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 dark:hover:from-purple-600 dark:hover:to-pink-600 transition-all font-medium text-lg shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <Heart className="h-5 w-5 mr-2" />
-            {loading ? 'Processing Payment...' : `Support with $${selectedAmount}`}
-          </button>
-        </div>
-      )}
-
-      <div className="mt-8 text-center">
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Payments are processed securely through Stripe. We never store your payment information.
-        </p>
-      </div>
+      {/* Payment Modal */}
+      <PaymentModal 
+        isOpen={showModal} 
+        onClose={() => setShowModal(false)} 
+        plan={selectedPlan} 
+      />
     </section>
   );
 };
 
 export default SupportUs;
+
