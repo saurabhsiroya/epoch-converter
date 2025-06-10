@@ -22,19 +22,7 @@ Visit the live application: [https://www.epochtimeconverter.org](https://www.epo
 - **API Access** - Programmatic access to all conversion features
 - **User Dashboard** - Manage account and API usage
 - **Subscription Plans** - Pro and Enterprise tiers with different limits
-- **Payment Processing** - Secure Stripe integration for subscriptions
-
-## 🔧 Environment Setup
-
-### Required Environment Variables
-
-For Stripe payment processing to work, you need to set up these environment variables in your Vercel project:
-
-```
-VITE_STRIPE_PUBLISHABLE_KEY=pk_live_your_publishable_key
-STRIPE_SECRET_KEY=sk_live_your_secret_key
-STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
-```
+- **Payment Processing** - Secure payment integration for subscriptions
 
 ## 🛠️ Development
 
@@ -74,15 +62,6 @@ The Epoch Converter API provides programmatic access to all conversion features:
 - **GET /api/week** - Get ISO week number for a date
 - **POST /api/batch** - Convert multiple timestamps at once
 - **GET /api/timezone** - Convert timestamps across timezones
-
-## 💳 Payment Integration
-
-This project uses Stripe for payment processing:
-
-- **POST /api/create-checkout-session** - Create a Stripe checkout session
-- **POST /api/webhook** - Handle Stripe webhook events
-- **POST /api/customer-portal** - Access Stripe customer portal
-- **GET /api/subscription-status** - Check subscription status
 
 ## 📄 License
 
