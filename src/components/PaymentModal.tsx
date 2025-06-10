@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Check, Zap, Crown, Building } from 'lucide-react';
+import { X, Check, Zap, Crown, Building, AlertCircle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
+import { useStripe } from '../contexts/StripeContext';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, selectedPl
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { updatePlan } = useAuth();
+  const { isConfigured } = useStripe();
 
   if (!isOpen) return null;
 
@@ -52,17 +54,35 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, selectedPl
     setLoading(true);
     
     try {
-      // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Update user plan
-      updatePlan(selectedPlan);
-      setSuccess(true);
-      
-      setTimeout(() => {
-        onClose();
-        setSuccess(false);
-      }, 2000);
+      if (isConfigured) {
+        // In a real implementation with backend:
+        // 1. Create checkout session on your backend
+        // 2. Redirect to Stripe Checkout
+        // 3. Handle success/cancel redirects
+        // 4. Process webhooks for subscription updates
+        
+        // For now, simulate the process
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // This would normally be handled by webhook after successful payment
+        updatePlan(selectedPlan);
+        setSuccess(true);
+        
+        setTimeout(() => {
+          onClose();
+          setSuccess(false);
+        }, 2000);
+      } else {
+        // Demo mode - simulate successful payment
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        updatePlan(selectedPlan);
+        setSuccess(true);
+        
+        setTimeout(() => {
+          onClose();
+          setSuccess(false);
+        }, 2000);
+      }
     } catch (error) {
       console.error('Payment failed:', error);
     } finally {
@@ -78,7 +98,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, selectedPl
             <Check className="h-8 w-8 text-green-600 dark:text-green-400" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Payment Successful!
+            {isConfigured ? 'Payment Successful!' : 'Upgrade Successful!'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
             Welcome to {plan.name}! Your account has been upgraded.
@@ -102,6 +122,22 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, selectedPl
             <X className="h-5 w-5" />
           </button>
         </div>
+
+        {/* Stripe Configuration Warning */}
+        {!isConfigured && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
+            <div className="flex items-start">
+              <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 mt-0.5 flex-shrink-0" />
+              <div>
+                <h3 className="font-medium text-amber-800 dark:text-amber-300 mb-1">Demo Mode</h3>
+                <p className="text-amber-700 dark:text-amber-400 text-sm">
+                  Stripe is not configured. This is a demonstration - no real payment will be processed. 
+                  See <code className="bg-amber-100 dark:bg-amber-900/40 px-1 rounded">STRIPE_SETUP.md</code> for configuration instructions.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-6 mb-6">
           <div className="flex items-center mb-4">
@@ -147,25 +183,22 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ isOpen, onClose, selectedPl
         </div>
 
         <div className="space-y-4">
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <p className="text-blue-800 dark:text-blue-300 text-sm">
-              <strong>Demo Mode:</strong> This is a demonstration. No actual payment will be processed.
-              In production, this would integrate with Stripe for secure payment processing.
-            </p>
-          </div>
-
           <button
             onClick={handlePayment}
             disabled={loading}
             className="w-full bg-blue-600 dark:bg-blue-500 text-white py-3 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Processing Payment...' : `Subscribe to ${plan.name} - $${plan.price}/month`}
+            {loading ? 'Processing...' : 
+             isConfigured ? `Subscribe to ${plan.name} - $${plan.price}/month` : 
+             `Demo: Upgrade to ${plan.name}`}
           </button>
         </div>
 
         <p className="text-xs text-gray-500 dark:text-gray-400 text-center mt-4">
-          By subscribing, you agree to our Terms of Service and Privacy Policy.
-          You can cancel anytime from your account settings.
+          {isConfigured ? 
+            'By subscribing, you agree to our Terms of Service and Privacy Policy. You can cancel anytime from your account settings.' :
+            'This is a demonstration. In production, payments would be processed securely through Stripe.'
+          }
         </p>
       </div>
     </div>
